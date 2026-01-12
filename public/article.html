@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article - Mon Blog</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .meta {
+            color: #888;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="nav"></nav>
+    <div id="article-view">Chargement...</div>
+
+    <script src="/js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const auth = await checkAuth();
+            updateNav(auth);
+
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                document.getElementById('article-view').innerHTML = 'Article introuvable.';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/articles/${id}`);
+                if (!res.ok) throw new Error('Not found');
+                const article = await res.json();
+
+                document.title = `${article.title} - Mon Blog`;
+                document.getElementById('article-view').innerHTML = `
+                    <h1>${article.title}</h1>
+                    <div class="meta">Écrit par ${article.User ? article.User.username : 'Inconnu'} le ${new Date(article.createdAt).toLocaleDateString()}</div>
+                    <div class="content">${article.content.replace(/\n/g, '<br>')}</div>
+                `;
+            } catch (err) {
+                document.getElementById('article-view').innerHTML = 'Article introuvable.';
+            }
+        });
+    </script>
+</body>
+
+</html>

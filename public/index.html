@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Blog</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        nav { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        nav a { margin-right: 15px; text-decoration: none; color: #333; font-weight: bold; }
+        .article { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 8px; background: #fafafa; }
+        .article h2 { margin-top: 0; }
+        .article h2 a { text-decoration: none; color: #2c3e50; }
+        .meta { color: #7f8c8d; font-size: 0.9em; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <nav id="nav"></nav>
+    <h1>Derniers Articles</h1>
+    <div id="articles">Chargement...</div>
+
+    <script src="/js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const auth = await checkAuth();
+            updateNav(auth);
+
+            try {
+                const res = await fetch('/api/articles');
+                const articles = await res.json();
+                
+                const container = document.getElementById('articles');
+                if (articles.length === 0) {
+                    container.innerHTML = '<p>Aucun article pour le moment.</p>';
+                    return;
+                }
+
+                container.innerHTML = articles.map(article => `
+                    <div class="article">
+                        <h2><a href="/article.html?id=${article.id}">${article.title}</a></h2>
+                        <p>${article.content.length > 200 ? article.content.substring(0, 200) + '...' : article.content}</p>
+                        <div class="meta">Par ${article.User ? article.User.username : 'Inconnu'} le ${new Date(article.createdAt).toLocaleDateString()}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                document.getElementById('articles').innerHTML = '<p>Erreur lors du chargement des articles.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
