@@ -89,6 +89,9 @@
         </thead>
         <tbody id="articlesList"></tbody>
     </table>
+    <p style="color: #666; font-style: italic; font-size: 0.9em; margin-top: 10px;">
+        Note : Vous ne pouvez modifier ou supprimer que les articles dont vous êtes l'auteur.
+    </p>
 
     <script src="/js/utils.js"></script>
     <script>
@@ -104,17 +107,21 @@
                 const articles = await res.json();
 
                 const list = document.getElementById('articlesList');
-                list.innerHTML = articles.map(article => `
+                list.innerHTML = articles.map(article => {
+                    const isAuthor = article.userId == auth.user.id;
+
+                    return `
                     <tr>
-                        <td>${article.title} ${article.User && article.User.id === auth.user.id ? '(Vous)' : ''}</td>
+                        <td>${article.title} ${isAuthor ? '(Vous)' : ''}</td>
                         <td>
-                            ${article.User && article.User.id === auth.user.id ? `
+                            ${isAuthor ? `
                                 <button class="btn-edit" onclick="editArticle(${article.id})">Modifier</button>
                                 <button class="btn-delete" onclick="deleteArticle(${article.id})">Supprimer</button>
                             ` : '-'}
                         </td>
                     </tr>
-                `).join('');
+                `;
+                }).join('');
             };
             loadArticles();
 

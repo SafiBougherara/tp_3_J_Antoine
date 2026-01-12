@@ -7,7 +7,7 @@ const authenticateToken = require('../middlewares/auth');
 router.get('/', async (req, res) => {
     try {
         const articles = await Article.findAll({
-            include: [{ model: User, attributes: ['username'] }],
+            include: [{ model: User, attributes: ['id', 'username'] }],
             order: [['createdAt', 'DESC']]
         });
         res.json(articles);
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const article = await Article.findByPk(req.params.id, {
-            include: [{ model: User, attributes: ['username'] }]
+            include: [{ model: User, attributes: ['id', 'username'] }]
         });
         if (!article) return res.status(404).json({ message: 'Article not found' });
         res.json(article);
