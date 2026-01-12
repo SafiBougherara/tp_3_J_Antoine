@@ -5,57 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - Mon Blog</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            max-width: 400px;
-            margin: 40px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        input {
-            display: block;
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #2ecc71;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #27ae60;
-        }
-
-        .error {
-            color: red;
-            font-size: 0.9em;
-            margin-bottom: 15px;
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-    <h2>Inscription</h2>
-    <div id="error" class="error"></div>
-    <form id="registerForm">
-        <input type="text" id="username" placeholder="Nom d'utilisateur" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Mot de passe" required>
-        <button type="submit">S'inscrire</button>
-    </form>
-    <p><a href="/login.html">Déjà un compte ? Se connecter</a></p>
-    <p><a href="/">Retour à l'accueil</a></p>
+    <div class="container form-card">
+        <h2 class="text-center mb-4">Inscription</h2>
+        <div id="error" class="text-danger text-center mb-4"></div>
+        <form id="registerForm">
+            <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <button type="submit" class="btn btn-primary btn-block">S'inscrire</button>
+        </form>
+        <p class="text-center mt-4 text-sm">
+            <a href="/login.html">Déjà un compte ? Se connecter</a>
+        </p>
+        <p class="text-center mt-4">
+            <a href="/">Retour à l'accueil</a>
+        </p>
+    </div>
 
     <script>
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
@@ -77,7 +46,6 @@
             } else {
                 const err = document.getElementById('error');
                 err.textContent = data.error || 'Erreur d\'inscription';
-                err.style.display = 'block';
             }
         });
     </script>

@@ -5,42 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article - Mon Blog</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        nav {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        a {
-            text-decoration: none;
-            color: #333;
-        }
-
-        .meta {
-            color: #888;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .content {
-            line-height: 1.6;
-            font-size: 1.1em;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
     <nav id="nav"></nav>
-    <div id="article-view">Chargement...</div>
+    <div class="container article-view" id="article-view">Chargement...</div>
 
     <script src="/js/utils.js"></script>
     <script>
@@ -52,7 +22,7 @@
             const id = params.get('id');
 
             if (!id) {
-                document.getElementById('article-view').innerHTML = 'Article introuvable.';
+                document.getElementById('article-view').innerHTML = '<p class="text-danger">Article introuvable.</p>';
                 return;
             }
 
@@ -63,12 +33,22 @@
 
                 document.title = `${article.title} - Mon Blog`;
                 document.getElementById('article-view').innerHTML = `
-                    <h1>${article.title}</h1>
-                    <div class="meta">Écrit par ${article.User ? article.User.username : 'Inconnu'} le ${new Date(article.createdAt).toLocaleDateString()}</div>
-                    <div class="content">${article.content.replace(/\n/g, '<br>')}</div>
+                    <div class="article-header">
+                        <h1>${article.title}</h1>
+                        <div class="article-meta">
+                            <span>Par ${article.User ? article.User.username : 'Inconnu'}</span>
+                            <span>•</span>
+                            <span>${new Date(article.createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                    <div class="article-content">${article.content.replace(/\n/g, '<br>')}</div>
+                    
+                    <div class="mt-4">
+                        <a href="/" class="btn" style="background: var(--text-light); color: white; display: inline-block;">&larr; Retour aux articles</a>
+                    </div>
                 `;
             } catch (err) {
-                document.getElementById('article-view').innerHTML = 'Article introuvable.';
+                document.getElementById('article-view').innerHTML = '<p class="text-danger">Article introuvable.</p>';
             }
         });
     </script>

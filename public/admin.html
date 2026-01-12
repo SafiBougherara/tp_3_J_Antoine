@@ -5,98 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration - Mon Blog</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        input,
-        textarea {
-            display: block;
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        textarea {
-            height: 150px;
-        }
-
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-
-        .btn-create {
-            background: #2ecc71;
-            color: white;
-            border: none;
-        }
-
-        .btn-delete {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-        }
-
-        .btn-edit {
-            background: #f1c40f;
-            color: black;
-            border: none;
-            padding: 5px 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-    <h1>Administration</h1>
-    <nav><a href="/">Retour au site</a></nav>
+    <nav id="nav"></nav>
+    <div class="container">
+        <h1>Administration</h1>
 
-    <h3>Ajouter un article</h3>
-    <form id="articleForm">
-        <input type="hidden" id="articleId">
-        <input type="text" id="title" placeholder="Titre de l'article" required>
-        <textarea id="content" placeholder="Contenu de l'article" required></textarea>
-        <button type="submit" class="btn-create" id="submitBtn">Publier</button>
-        <button type="button" id="cancelBtn" style="display:none;">Annuler</button>
-    </form>
+        <div class="card mt-4">
+            <h3 class="mb-4">Ajouter un article</h3>
+            <form id="articleForm">
+                <input type="hidden" id="articleId">
+                <input type="text" id="title" placeholder="Titre de l'article" required>
+                <textarea id="content" placeholder="Contenu de l'article" required></textarea>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Publier</button>
+                    <button type="button" class="btn" style="background: var(--text-light); color: white; display:none;"
+                        id="cancelBtn">Annuler</button>
+                </div>
+            </form>
+        </div>
 
-    <h3>Gestion des Articles</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Titre</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="articlesList"></tbody>
-    </table>
-    <p style="color: #666; font-style: italic; font-size: 0.9em; margin-top: 10px;">
-        Note : Vous ne pouvez modifier ou supprimer que les articles dont vous êtes l'auteur.
-    </p>
+        <h3 class="mt-4 mb-4">Gestion des Articles</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="articlesList"></tbody>
+        </table>
+        <p class="text-sm mt-4" style="font-style: italic;">
+            Note : Vous ne pouvez modifier ou supprimer que les articles dont vous êtes l'auteur.
+        </p>
+    </div>
 
     <script src="/js/utils.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const auth = await checkAuth();
+            updateNav(auth); // Use global Nav
             if (!auth.authenticated) {
                 window.location.href = '/login.html';
                 return;
@@ -115,8 +65,8 @@
                         <td>${article.title} ${isAuthor ? '(Vous)' : ''}</td>
                         <td>
                             ${isAuthor ? `
-                                <button class="btn-edit" onclick="editArticle(${article.id})">Modifier</button>
-                                <button class="btn-delete" onclick="deleteArticle(${article.id})">Supprimer</button>
+                                <button class="btn btn-edit" onclick="editArticle(${article.id})">Modifier</button>
+                                <button class="btn btn-delete" onclick="deleteArticle(${article.id})">Supprimer</button>
                             ` : '-'}
                         </td>
                     </tr>
